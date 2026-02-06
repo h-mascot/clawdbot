@@ -70,3 +70,19 @@
   margin: 1em 0;
 }
 
+.chat-text--sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+
+.chat-text-section {
+  width: 100%;
+}
+
+.chat-text-section--ai {
+  background: var(--ai-highlight);
+  border: 1px solid var(--ai-highlight-border);
+  border-radius: 8px;
+  padding: 0.35em 0.5em;
+}

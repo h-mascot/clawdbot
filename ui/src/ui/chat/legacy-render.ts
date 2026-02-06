@@ -1,7 +1,5 @@
 import { html, nothing } from "lit";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
-
-import { toSanitizedMarkdownHtml } from "../markdown";
+import { renderAuthoredMarkdown } from "./authorship";
 import {
   isToolResultMessage,
   normalizeRoleForGrouping,
@@ -35,7 +33,12 @@ export function renderReadingIndicator() {
 export function renderMessage(
   message: unknown,
   props?: LegacyToolOutputProps,
-  opts?: { streaming?: boolean; showReasoning?: boolean },
+  opts?: {
+    streaming?: boolean;
+    showReasoning?: boolean;
+    showAuthorship?: boolean;
+    sessionKey?: string;
+  },
 ) {
   const m = message as Record<string, unknown>;
   const role = typeof m.role === "string" ? m.role : "unknown";
@@ -99,7 +102,13 @@ export function renderMessage(
       <div class="chat-msg">
         <div class="chat-bubble ${opts?.streaming ? "streaming" : ""}">
           ${markdown
-            ? html`<div class="chat-text">${unsafeHTML(toSanitizedMarkdownHtml(markdown))}</div>`
+            ? renderAuthoredMarkdown({
+                message,
+                markdown,
+                showHighlight: Boolean(opts?.showAuthorship),
+                sessionKey: opts?.sessionKey,
+                cache: !opts?.streaming,
+              })
             : nothing}
           ${toolCards.map((card, index) =>
             renderToolCardLegacy(card, {
@@ -118,4 +127,3 @@ export function renderMessage(
     </div>
   `;
 }
-

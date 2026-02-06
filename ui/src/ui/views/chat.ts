@@ -40,6 +40,8 @@ export type ChatProps = {
   onToolOutputToggle: (id: string, expanded: boolean) => void;
   // Focus mode
   focusMode: boolean;
+  // Authorship highlighting
+  showAuthorship: boolean;
   // Feature flag for new Slack-style layout with sidebar
   useNewChatLayout?: boolean;
   // Sidebar state (used when useNewChatLayout is true)
@@ -132,6 +134,10 @@ export function renderChat(props: ChatProps) {
                       item.text,
                       item.startedAt,
                       props.onOpenSidebar,
+                      {
+                        showAuthorship: props.showAuthorship,
+                        sessionKey: props.sessionKey,
+                      },
                     )
                   : renderMessage(
                       {
@@ -140,7 +146,12 @@ export function renderChat(props: ChatProps) {
                         timestamp: item.startedAt,
                       },
                       props,
-                      { streaming: true, showReasoning },
+                      {
+                        streaming: true,
+                        showReasoning,
+                        showAuthorship: props.showAuthorship,
+                        sessionKey: props.sessionKey,
+                      },
                     );
               }
 
@@ -148,10 +159,16 @@ export function renderChat(props: ChatProps) {
                 return renderMessageGroup(item, {
                   onOpenSidebar: props.onOpenSidebar,
                   showReasoning,
+                  showAuthorship: props.showAuthorship,
+                  sessionKey: props.sessionKey,
                 });
               }
 
-              return renderMessage(item.message, props, { showReasoning });
+              return renderMessage(item.message, props, {
+                showReasoning,
+                showAuthorship: props.showAuthorship,
+                sessionKey: props.sessionKey,
+              });
             })}
           </div>
         </div>

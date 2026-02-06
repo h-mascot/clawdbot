@@ -18,6 +18,8 @@
   --border-strong: rgba(255, 255, 255, 0.16);
   --accent: #f59f4a;
   --accent-2: #34c7b7;
+  --ai-highlight: rgba(168, 85, 247, 0.18);
+  --ai-highlight-border: rgba(168, 85, 247, 0.4);
   --ok: #2bd97f;
   --warn: #f2c94c;
   --danger: #ff6b6b;
@@ -50,6 +52,8 @@
   --border-strong: rgba(18, 24, 40, 0.2);
   --accent: #e28a3f;
   --accent-2: #1ba99d;
+  --ai-highlight: rgba(128, 65, 196, 0.14);
+  --ai-highlight-border: rgba(128, 65, 196, 0.32);
   --ok: #1aa86c;
   --warn: #b3771c;
   --danger: #d44848;

@@ -1,7 +1,5 @@
 import { html, nothing } from "lit";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
-
-import { toSanitizedMarkdownHtml } from "../markdown";
+import { renderAuthoredMarkdown } from "./authorship";
 import type { MessageGroup } from "../types/chat-types";
 import { isToolResultMessage, normalizeRoleForGrouping } from "./message-normalizer";
 import {
@@ -30,6 +28,7 @@ export function renderStreamingGroup(
   text: string,
   startedAt: number,
   onOpenSidebar?: (content: string) => void,
+  opts?: { showAuthorship?: boolean; sessionKey?: string },
 ) {
   const timestamp = new Date(startedAt).toLocaleTimeString([], {
     hour: "numeric",
@@ -46,7 +45,12 @@ export function renderStreamingGroup(
             content: [{ type: "text", text }],
             timestamp: startedAt,
           },
-          { isStreaming: true, showReasoning: false },
+          {
+            isStreaming: true,
+            showReasoning: false,
+            showAuthorship: opts?.showAuthorship,
+            sessionKey: opts?.sessionKey,
+          },
           onOpenSidebar,
         )}
         <div class="chat-group-footer">
@@ -60,7 +64,12 @@ export function renderStreamingGroup(
 
 export function renderMessageGroup(
   group: MessageGroup,
-  opts: { onOpenSidebar?: (content: string) => void; showReasoning: boolean },
+  opts: {
+    onOpenSidebar?: (content: string) => void;
+    showReasoning: boolean;
+    showAuthorship?: boolean;
+    sessionKey?: string;
+  },
 ) {
   const normalizedRole = normalizeRoleForGrouping(group.role);
   const who =
@@ -91,6 +100,8 @@ export function renderMessageGroup(
               isStreaming:
                 group.isStreaming && index === group.messages.length - 1,
               showReasoning: opts.showReasoning,
+              showAuthorship: opts.showAuthorship,
+              sessionKey: opts.sessionKey,
             },
             opts.onOpenSidebar,
           ),
@@ -113,7 +124,12 @@ function renderAvatar(role: string) {
 
 function renderGroupedMessage(
   message: unknown,
-  opts: { isStreaming: boolean; showReasoning: boolean },
+  opts: {
+    isStreaming: boolean;
+    showReasoning: boolean;
+    showAuthorship?: boolean;
+    sessionKey?: string;
+  },
   onOpenSidebar?: (content: string) => void,
 ) {
   const m = message as Record<string, unknown>;
@@ -157,10 +173,15 @@ function renderGroupedMessage(
   return html`
     <div class="${bubbleClasses}">
       ${markdown
-        ? html`<div class="chat-text">${unsafeHTML(toSanitizedMarkdownHtml(markdown))}</div>`
+        ? renderAuthoredMarkdown({
+            message,
+            markdown,
+            showHighlight: Boolean(opts.showAuthorship),
+            sessionKey: opts.sessionKey,
+            cache: !opts.isStreaming,
+          })
         : nothing}
       ${toolCards.map((card) => renderToolCardSidebar(card, onOpenSidebar))}
     </div>
   `;
 }
-

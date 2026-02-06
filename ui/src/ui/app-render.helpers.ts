@@ -44,6 +44,7 @@ export function renderChatControls(state: AppViewState) {
   // Refresh icon
   const refreshIcon = html`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>`;
   const focusIcon = html`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h3"></path><path d="M20 7V4h-3"></path><path d="M4 17v3h3"></path><path d="M20 17v3h-3"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+  const authorshipIcon = html`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.5L18 9l-4.2 1.5L12 15l-1.8-4.5L6 9l4.2-1.5L12 3z"></path><path d="M19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14z"></path></svg>`;
   return html`
     <div class="chat-controls">
       <label class="field chat-controls__session">
@@ -98,6 +99,19 @@ export function renderChatControls(state: AppViewState) {
         title="Toggle focus mode (hide sidebar + page header)"
       >
         ${focusIcon}
+      </button>
+      <button
+        class="btn btn--sm btn--icon ${state.settings.chatAuthorshipHighlight ? "active" : ""}"
+        @click=${() =>
+          state.applySettings({
+            ...state.settings,
+            chatAuthorshipHighlight: !state.settings.chatAuthorshipHighlight,
+          })}
+        aria-pressed=${state.settings.chatAuthorshipHighlight}
+        aria-label="Toggle AI authorship highlight"
+        title="Toggle AI authorship highlight"
+      >
+        ${authorshipIcon}
       </button>
       <button
         class="btn btn--sm btn--icon ${state.settings.useNewChatLayout ? "active" : ""}"

@@ -367,6 +367,7 @@ export function renderApp(state: AppViewState) {
               onToolOutputToggle: (id, expanded) =>
                 state.toggleToolOutput(id, expanded),
               focusMode: state.settings.chatFocusMode,
+              showAuthorship: state.settings.chatAuthorshipHighlight,
               useNewChatLayout: state.settings.useNewChatLayout,
               onRefresh: () => {
                 state.resetToolStream();
